@@ -5,9 +5,28 @@
 		</title>
 	</head>
 	<body>
+		<h3> One time search? </h3>
 		<form name="isbn_form" action="php/lookup.php" method="GET">
-			ISBN: <input type="text" name="isbn">
+			ISBN: <input type="text" name="isbn"> </br>
+			Format: <input type="text" name="format"> </br>
 			<input type="submit" value="Submit">	
 		</form>
+		
+		<h3> Login: </h3>
+		<form name="login" action="php/login.php" method="GET">
+			Username: <input type="text" name="username"> </br>
+			Password: <input type="text" name="password"> </br>
+			Format: <input type="text" name="format"> </br>
+			<input type="submit" value="Login">	
+		</form>
+
+		<h3> New? Create an account </h3>
+		<form name="new_user" action="php/account.php" method="GET">
+			Username: <input type="text" name="username"> </br>
+			Password: <input type="text" name="password"> </br>
+			<input type="hidden" name="action" value="create">
+			<input type="submit" value="Create">	
+		</form>
+
 	</body>
 </html>
