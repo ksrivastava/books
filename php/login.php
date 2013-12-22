@@ -13,16 +13,6 @@ if ($user_id === null) {
 	die();
 }
 
-session_start();
-
-if (isset($_SESSION["session_id"])) {
-	echo $_SESSION["session_id"];
-	//unset($_SESSION["cookie"]);
-}
-else
-{
-	echo "Generate";
-	generateSession($username);
-}
+echo "OK";
 
 ?>

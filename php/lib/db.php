@@ -5,45 +5,54 @@
 
 	function checkExists($username) {
 		$conn = openConnection();
-		$db = $conn->books;
-		
-		$found = false;
-		$col = $db->users;
-		$cursor = $col->find();
-		//echo "All users: " . "</br>";
-		foreach ($cursor as $entry) {
-			if ($entry["username"] == $username) {
-				$found = true;
-			}
-			//echo $entry["username"] . " " . $entry["password"] . "</br>";
-		}
+		$col = $conn->books->users;
+		$query = array('username' => $username);
+		$cursor = $col->find($query);
+		$found = $cursor->hasNext();
 		$conn->close();
 		return $found;
 	}
 
 	function insertUser($username, $password) {
 		$conn = openConnection();
-		$db = $conn->books;
-
-		$col = $db->users;
+		$col = $conn->books->users;
 		$entry = array("username" => $username, "password" => $password);
 		$status = $col->insert($entry);
 		$conn->close();
 		return $status;
 	}
 
+	function insertUserBooks($user_id, $isbn) {
+		$conn = openConnection();
+		$col = $conn->books->userBooks;
+		$entry = array("user_id" => $user_id, "isbn" => $isbn);
+		$status = $col->insert($entry);
+		$conn->close();
+		return $status;
+	}
+
+	function getUserBooks($user_id, &$isbn_array) {
+		$conn = openConnection();
+		$col = $conn->books->userBooks;
+		$query = array("user_id" => $user_id);
+		$cursor = $col->find($query);
+		$cursor->sort(array('isbn' => 1));
+		foreach ($cursor as $entry) {
+			$isbn_array[] = $entry['isbn'];
+		}
+		$conn->close();
+	}
+
 	function authenticate($username, $password) {
 		$conn = openConnection();
-		$db = $conn->books;
+		$col = $conn->books->users;
 
-		$col = $db->users;
-		$cursor = $col->find();
-		foreach ($cursor as $entry) {
-			if ($entry["username"] == $username && $entry["password"] == $password) {
-				 $conn->close();
-				 return $entry["_id"];
-			}
-			//echo $entry["username"] . " " . $entry["password"] . "</br>";
+		$query = array('username' => $username, 'password' => $password);
+		$cursor = $col->find($query);
+		if($cursor->hasNext()) {
+			$entry = $cursor->getNext();
+			$conn->close();
+			return $entry["_id"];
 		}
 		$conn->close();
 		return null;

@@ -6,12 +6,15 @@ require_once('lib/db.php');
 $username = get("username", false);
 $password = get("password", false); // encrypted
 $username_exists = checkExists($username);
+
 if ($username_exists) {
 	http_response_code(406);
 	die();
 }
 
-insertUser($username, $password);
-echo "Success";
+$status = insertUser($username, $password);
+if ($status) {
+	echo "OK";
+}
 
 ?>

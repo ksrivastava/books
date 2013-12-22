@@ -1,39 +1,26 @@
 <?php
-	
-	require_once('header/lookup.php');
+require_once('lib/inc.php');
+require_once('lib/func.php');
+require_once('lib/db.php');
+require_once('lib/lookup.php');
 
-	function displayWelcome($username, $user_id) {
-		echo "<html>";
-		echo "<head>";
-		echo "<title> Welcome " . $username . "</title>";
-		echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/profile.css\">";
-		echo "</head><body>";
-		echo "Welcome! Here are your books: " . "</br>";
-		global $db;
-		$query = array("user_id" => $user_id);
-		$col = $db->userBooks;
-		$cursor = $col->find($query);
-		foreach ($cursor as $book) {
-   			var_dump($book);
-		}
-
-		echo "<p>Insert new book:"
+$username = get("username", false);
+$password = get("password", false); // encrypted
 
 
-		echo "</body></html>";
-	}
+$user_id = authenticate($username, $password);
+if ($user_id === null) {
+	http_response_code(401);
+	die();
+}
 
-	function listBooks($username, $user_id) {
-		echo "(json)";
-		global $db;
-		$query = array("user_id" => $user_id);
-		$col = $db->userBooks;
-		$cursor = $col->find($query);
-		foreach ($cursor as $book) {
-   			$result = array();
-			getBook($book["isbn"], $result);
-			echo json_encode($result);
-		}
-	}
+$isbn_array = array();
+getUserBooks($user_id, $isbn_array);
+
+foreach ($isbn_array as $isbn) {
+	$result = array();
+	getBook($isbn, $result);
+	echo json_encode($result);
+}
 
 ?>

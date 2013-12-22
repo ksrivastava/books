@@ -2,7 +2,7 @@
 
 require_once('lib/inc.php');
 require_once('lib/func.php');
-require_once('lib/search.php');
+require_once('lib/lookup.php');
 
 $isbn = get("isbn", false);
 $result = array();
