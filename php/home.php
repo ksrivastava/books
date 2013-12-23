@@ -15,7 +15,7 @@ if ($user_id === null) {
 }
 
 $isbn_array = array();
-getUserBooks($user_id, $isbn_array);
+getUserBooks($username, $isbn_array);
 
 foreach ($isbn_array as $isbn) {
 	$result = array();

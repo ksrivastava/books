@@ -22,19 +22,37 @@
 		return $status;
 	}
 
-	function insertUserBooks($user_id, $isbn) {
+	function deleteUser($username, $password) {
+		$conn = openConnection();
+		$col = $conn->books->users;
+		$query = array("username" => $username, "password" => $password);
+		$status = $col->remove($query);
+		$conn->close();
+		return $status;
+	}
+
+	function insertUserBook($username, $isbn) {
 		$conn = openConnection();
 		$col = $conn->books->userBooks;
-		$entry = array("user_id" => $user_id, "isbn" => $isbn);
+		$entry = array("username" => $username, "isbn" => $isbn);
 		$status = $col->insert($entry);
 		$conn->close();
 		return $status;
 	}
 
-	function getUserBooks($user_id, &$isbn_array) {
+	function deleteUserBook($username, $isbn) {
 		$conn = openConnection();
 		$col = $conn->books->userBooks;
-		$query = array("user_id" => $user_id);
+		$entry = array("username" => $username, "isbn" => $isbn);
+		$status = $col->remove($entry);
+		$conn->close();
+		return $status;
+	}
+
+	function getUserBooks($username, &$isbn_array) {
+		$conn = openConnection();
+		$col = $conn->books->userBooks;
+		$query = array("username" => $username);
 		$cursor = $col->find($query);
 		$cursor->sort(array('isbn' => 1));
 		foreach ($cursor as $entry) {

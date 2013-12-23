@@ -5,15 +5,15 @@ require_once('lib/db.php');
 
 $username = get("username", false);
 $password = get("password", false); // encrypted
-$isbn = get("isbn", false);
+$username_exists = checkExists($username);
 
-$user_id = authenticate($username, $password);
-if ($user_id === null) {
-	http_response_code(401);
+if (!$username_exists) {
+	echo $username + " Not found";
+	http_response_code(406);
 	die();
 }
 
-$status = insertUserBook($username, $isbn);
+$status = deleteUser($username, $password);
 if ($status) {
 	echo "OK";
 }

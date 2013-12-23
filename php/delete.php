@@ -13,7 +13,7 @@ if ($user_id === null) {
 	die();
 }
 
-$status = insertUserBook($username, $isbn);
+$status = deleteUserBook($username, $isbn);
 if ($status) {
 	echo "OK";
 }
